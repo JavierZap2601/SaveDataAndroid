@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -15,6 +16,9 @@ class PreferencesViewModel(val context: Context) {
         val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
         val NAME = stringPreferencesKey("name")
         val AGE = intPreferencesKey("age")
+        val HEIGHT = intPreferencesKey("height")
+        val WEIGHT = floatPreferencesKey("weight")
+        val HOBBY = stringPreferencesKey("hobby")
     }
     val age: Flow<Int> = context.dataStore.data.map { preferences ->
         //No type safety
@@ -25,11 +29,29 @@ class PreferencesViewModel(val context: Context) {
         preferences[NAME] ?: ""
     }
 
+    val height: Flow<Int> = context.dataStore.data.map { preferences ->
+        //No type safety
+        preferences[HEIGHT] ?: 0
+    }
+
+    val weight: Flow<Any> = context.dataStore.data.map { preferences ->
+        //No type safety
+        preferences[WEIGHT] ?: 0.0
+    }
+
+    val hobby: Flow<String> = context.dataStore.data.map { preferences ->
+        //No type safety
+        preferences[HOBBY] ?: ""
+    }
+
     //equivalente a setName y setAge
-    suspend fun setNameAndAge(name:String, age: Int){
+    suspend fun setNameAndAge(name:String, age: Int, height: Int, weight: Float, hobby: String){
         context.dataStore.edit { settings ->
             settings[NAME] = name
             settings[AGE] = age
+            settings[HEIGHT] = height
+            settings[WEIGHT] = weight
+            settings[HOBBY] = hobby
         }
     }
 }
