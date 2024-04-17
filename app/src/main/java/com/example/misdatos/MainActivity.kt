@@ -81,7 +81,7 @@ fun SettingsView(preferencesViewModel: PreferencesViewModel){
     var corrutineScope = rememberCoroutineScope()
 
     var savedAge = preferencesViewModel.age.collectAsState(initial = 0)
-    var saveName = preferencesViewModel.name.collectAsState(initial = "???")
+    var savedName = preferencesViewModel.name.collectAsState(initial = "???")
     var savedHeight = preferencesViewModel.height.collectAsState(initial = 0.0)
     var savedWeight = preferencesViewModel.weight.collectAsState(initial = 0.0)
     var savedHobby = preferencesViewModel.hobby.collectAsState(initial = "???")
@@ -90,81 +90,94 @@ fun SettingsView(preferencesViewModel: PreferencesViewModel){
         Text(text="Datos del Usuario")
         Spacer(modifier = Modifier.height(15.dp))
 
-        OutlinedTextField(value = nombre,
-            label = { Text("Nombre")},
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Info,
-                    contentDescription = null
-                )
-            },
-            onValueChange = {
-            nombre = it
-        })
-        Spacer(modifier = Modifier.height(10.dp))
-
-        OutlinedTextField(value = edad,
-            label = { Text("Edad")},
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Info,
-                    contentDescription = null
-                )
-            },
-            onValueChange = {
-            edad = it
-        })
-        Spacer(modifier = Modifier.height(10.dp))
-
-        OutlinedTextField(value = altura,
-            label = { Text("Altura")},
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Info,
-                    contentDescription = null
-                )
-            },
-            onValueChange = {
-            altura = it
-        })
-        Spacer(modifier = Modifier.height(10.dp))
-
-        OutlinedTextField(value = peso,
-            label = { Text("Peso")},
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Info,
-                    contentDescription = null
-                )
-            },
-            onValueChange = {
-            peso = it
-        })
-        Spacer(modifier = Modifier.height(10.dp))
-
-        OutlinedTextField(value = hobby,
-            label = { Text("Hobby")},
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Info,
-                    contentDescription = null
-                )
-            },
-            onValueChange = {
-            hobby = it
-        })
-        Spacer(modifier = Modifier.height(10.dp))
-
-        Button(onClick = {
-            corrutineScope.launch{
-                if(edad.toIntOrNull() != null && altura.toIntOrNull() != null && peso.toFloatOrNull() != null ){
-                    preferencesViewModel.setNameAndAge(nombre, edad.toInt(),   altura.toInt(), peso.toFloat(), hobby)
-                }
-            }
-        }){
-            Text(text="Guardar Datos")
+        if(savedName.value == "") {
+            OutlinedTextField(value = nombre,
+                label = { Text("Nombre") },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Info,
+                        contentDescription = null
+                    )
+                },
+                onValueChange = {
+                    nombre = it
+                })
+            Spacer(modifier = Modifier.height(10.dp))
         }
-        Text(text = "Nombre: ${saveName.value}")
+        if(savedAge.value == 0) {
+            OutlinedTextField(value = edad,
+                label = { Text("Edad") },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Info,
+                        contentDescription = null
+                    )
+                },
+                onValueChange = {
+                    edad = it
+                })
+            Spacer(modifier = Modifier.height(10.dp))
+        }
+        if(savedHeight.value == 0) {
+            OutlinedTextField(value = altura,
+                label = { Text("Altura") },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Info,
+                        contentDescription = null
+                    )
+                },
+                onValueChange = {
+                    altura = it
+                })
+            Spacer(modifier = Modifier.height(10.dp))
+        }
+        if(savedWeight.value == 0.0) {
+            OutlinedTextField(value = peso,
+                label = { Text("Peso") },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Info,
+                        contentDescription = null
+                    )
+                },
+                onValueChange = {
+                    peso = it
+                })
+            Spacer(modifier = Modifier.height(10.dp))
+        }
+        if(savedHobby.value == "") {
+            OutlinedTextField(value = hobby,
+                label = { Text("Hobby") },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Info,
+                        contentDescription = null
+                    )
+                },
+                onValueChange = {
+                    hobby = it
+                })
+            Spacer(modifier = Modifier.height(10.dp))
+        }
+        if(savedName.value == "" && savedAge.value == 0 && savedHeight.value == 0 && savedWeight.value == 0.0 && savedHobby.value == "") {
+            Button(onClick = {
+                corrutineScope.launch {
+                    if (edad.toIntOrNull() != null && altura.toIntOrNull() != null && peso.toFloatOrNull() != null) {
+                        preferencesViewModel.setNameAndAge(
+                            nombre,
+                            edad.toInt(),
+                            altura.toInt(),
+                            peso.toFloat(),
+                            hobby
+                        )
+                    }
+                }
+            }) {
+                Text(text = "Guardar Datos")
+            }
+        }
+        Text(text = "Nombre: ${savedName.value}")
         Text(text = "Edad: ${savedAge.value} años")
         Text(text = "Altura: ${savedHeight.value} cm")
         Text(text = "Peso: ${savedWeight.value} kg")
